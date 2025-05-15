@@ -1,9 +1,15 @@
-const Layout = () => {return (<html>
+import "./globals.css";
+
+const Layout = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {return (<html>
 <head>
   
 </head>
-  <body>
-    
+  <body suppressHydrationWarning className = "bg-black">
+{children}    
   </body>
 </html>)
 }
