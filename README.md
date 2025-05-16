@@ -1,5 +1,5 @@
-next run app: npm run dev
-python run app: fastapi dev server/server.py
+- next run app: npm run dev
+- python run app: fastapi dev server/server.py
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
