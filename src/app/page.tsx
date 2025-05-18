@@ -20,7 +20,7 @@ const add_quote = () => {
     platform: "chess.com",
     is_grandmaster: false
 };
-    axios.post('http://localhost:8000/create_username', request_obj)
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/create_username`, request_obj)
       .then(response => {
         console.log(response.data.message)
         setLoading(false);

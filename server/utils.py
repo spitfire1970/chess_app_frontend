@@ -7,9 +7,12 @@ import time
 import re
 import io
 import random
+import os
+from huggingface_hub import hf_hub_download
 from pathlib import Path
 from encoder.model import Encoder
 from data_objects.game import Game
+
 
 _model = None
 _device = None
@@ -19,16 +22,23 @@ model_num = 6
 
 def load_model(weights_fpath: Path):
     global _model, _device
-    
+
     print("Loading model...")
     _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
+    if not os.path.exists(str(weights_fpath)):
+        os.makedirs(os.path.dirname(str(weights_fpath)), exist_ok=True)
+        hf_hub_download(
+            repo_id="spitfire1970/chess_player_similarity",
+            filename="6.pt",
+            local_dir=os.path.dirname(str(weights_fpath)),
+            local_dir_use_symlinks=False
+        )
     checkpoint = torch.load(weights_fpath, _device, weights_only=True)
     _model = Encoder(_device)
     state_dict = checkpoint['model_state']
     _model.load_state_dict(state_dict)
     _model = _model.to(_device)
-    _model.eval()    
+    _model.eval()
     print(f"Successfully loaded model from {weights_fpath}")
 
 def get_centroid_embedding(player_batch, num_games):
@@ -42,7 +52,7 @@ def get_centroid_embedding(player_batch, num_games):
         centroids_incl = centroids_incl.clone() / torch.norm(centroids_incl, dim=2, keepdim=True)
     centroids_incl = centroids_incl.cpu().squeeze(1)
     final_embeds = centroids_incl[0].numpy().tolist()
-    return final_embeds 
+    return final_embeds
 
 def process_game(game):
     def create_position_planes(board: chess.Board, positions_seen: set, cur_player: chess.Color) -> np.ndarray:
