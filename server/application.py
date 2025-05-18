@@ -21,6 +21,10 @@ class ChessUserRequest(BaseModel):
     platform: str
     is_grandmaster: bool = False
 
+@application.get("/")
+def root():
+    return {"message": "Hello World"}
+
 @application.post("/create_username")
 def create_username(request: ChessUserRequest, db: Session = Depends(get_db)):
     
