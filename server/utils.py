@@ -13,7 +13,9 @@ from data_objects.game import Game
 
 _model = None
 _device = None
+download_games = 550
 games_per_player = 500
+model_num = 6
 
 def load_model(weights_fpath: Path):
     global _model, _device
@@ -29,16 +31,18 @@ def load_model(weights_fpath: Path):
     _model.eval()    
     print(f"Successfully loaded model from {weights_fpath}")
 
-def get_centroid_embedding(player_batch):
+def get_centroid_embedding(player_batch, num_games):
     global _model, _device
     inputs = torch.from_numpy(player_batch).float().to(_device)
     with torch.no_grad():
         embeds = _model(inputs)
-        embeds = embeds.view((1, games_per_player, -1)).to(_device)
+        print(embeds.shape)
+        embeds = embeds.view((1, num_games, -1)).to(_device)
         centroids_incl = torch.mean(embeds, dim=1, keepdim=True)
         centroids_incl = centroids_incl.clone() / torch.norm(centroids_incl, dim=2, keepdim=True)
     centroids_incl = centroids_incl.cpu().squeeze(1)
-    return [centroid.numpy() for centroid in centroids_incl]
+    final_embeds = centroids_incl[0].numpy().tolist()
+    return final_embeds 
 
 def process_game(game):
     def create_position_planes(board: chess.Board, positions_seen: set, cur_player: chess.Color) -> np.ndarray:
@@ -315,7 +319,7 @@ def download_pgn_for_players(username):
     
     session = requests.Session()
         
-    pgn_content = io.StringIO(download_blitz_games(username, session, games_per_player))
+    pgn_content = io.StringIO(download_blitz_games(username, session, download_games))
     l = []
 
     while True:
@@ -331,7 +335,11 @@ def download_pgn_for_players(username):
             color = "black"
         else:
             raise Exception
-        arrs = process_game(game)
+        try:
+            arrs = process_game(game)
+        except:
+            print("skipped")
+            continue
         if arrs is None: # skip if less than 10 moves
             print("skipped")
             continue
@@ -339,8 +347,6 @@ def download_pgn_for_players(username):
             l.append(arrs[0])
         else:
            l.append(arrs[1])
-
-    inputs = np.array([Game(g).random_partial() for g in l])
-    load_model
-
-    return get_centroid_embedding(inputs)
+    inputs = np.array([Game(g).random_partial() for g in l[:games_per_player]])
+    load_model(f"server/models/{model_num}.pt")
+    return get_centroid_embedding(inputs, min(len(l), games_per_player))

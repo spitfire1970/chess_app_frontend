@@ -1,5 +1,7 @@
 - next run app: npm run dev
-- python run app: fastapi dev server/server.py
+- python run app: 
+    fastapi dev server/server.py
+    uvicorn server.server:app --reload
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
