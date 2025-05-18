@@ -4,7 +4,6 @@ sys.path.append("/".join(__file__.split('/')[:-2]))
 from params_model import *
 from params_data import *
 
-from torch.nn.utils import clip_grad_norm_
 from collections import OrderedDict
 from torch import nn
 import torch
@@ -17,16 +16,15 @@ class ConvBlock(nn.Sequential):
             ('relu', nn.ReLU(inplace=True)),
         ]))
 
-# reference: https://github.com/moskomule/senet.pytorch/blob/master/senet/se_resnet.py
 class SqueezeExcitation(nn.Module):
     def __init__(self, channels, ratio):
         super().__init__()
 
-        self.pool = nn.AdaptiveAvgPool2d(1) # reduce dimensions to h x w to 1 x 1 # squeeze
+        self.pool = nn.AdaptiveAvgPool2d(1)
         # tiny nn
         self.lin1 = nn.Linear(channels, channels // ratio)
         self.relu = nn.ReLU(inplace=True)
-        self.lin2 = nn.Linear(channels // ratio, 2 * channels) # excite
+        self.lin2 = nn.Linear(channels // ratio, 2 * channels)
 
     def forward(self, x):
         n, c, h, w = x.size()
@@ -40,10 +38,9 @@ class SqueezeExcitation(nn.Module):
         x = x.view(n, 2 * c, 1, 1)
         scale, shift = x.chunk(2, dim=1)
 
-        x = scale.sigmoid() * x_in + shift # combine batch norm like shifting with SE
+        x = scale.sigmoid() * x_in + shift
         return x
 
-# reference only: https://github.com/imkhan2/se-resnet/blob/master/se_resnet.py
 class ResidualBlock(nn.Module):
     def __init__(self, channels, se_ratio):
         super().__init__()
@@ -107,31 +104,8 @@ class Encoder(nn.Module):
         # Cosine similarity scaling (with fixed initial parameter values)
         self.similarity_weight = nn.Parameter(torch.tensor([similarity_weight_init])) 
         self.similarity_bias = nn.Parameter(torch.tensor([similarity_bias_init]))
-
-        # Loss
-        if loss_method == "mix":
-            self.loss_fn = self.GE2E_loss_mix
-        elif loss_method == "softmax":
-            self.loss_fn = self.GE2E_softmax_loss
-        else:
-            self.loss_fn = self.GE2E_contrast_loss
-
-    def do_gradient_ops(self):
-        # Gradient scale (don't want these two to change rapidly)
-        self.similarity_weight.grad *= 0.01
-        self.similarity_bias.grad *= 0.01
-            
-        # Gradient clipping for exploding gradients #https://medium.com/biased-algorithms/guide-to-gradient-clipping-in-pytorch-f1db24ea08a2
-        clip_grad_norm_(self.parameters(), 3, norm_type=2) # start from max_norm = 1.0, adjust accordingly
     
     def forward(self, games):
-        """
-        Computes the embeddings of a batch of games.
-        
-        :param games: batch of games of same duration as a tensor of shape 
-        (batch_size, n_frames, 34, 8, 8)
-        :return: the embeddings as a tensor of shape (batch_size, embedding_size)
-        """
 
         batch_size, n_frames, feature_shape = games.shape[0], games.shape[1], games.shape[2:]
         
@@ -153,4 +127,3 @@ class Encoder(nn.Module):
         embeds = embeds_raw / torch.norm(embeds_raw, dim=1, keepdim=True)
         
         return embeds
-   

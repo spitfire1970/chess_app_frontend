@@ -20,3 +20,4 @@ next-env.d.ts
 .vscode
 __pycache__
 myenv
+server/models/6.pt

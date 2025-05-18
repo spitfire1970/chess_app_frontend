@@ -1,8 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, Boolean, Enum
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
-import enum
 import os
 from pgvector.sqlalchemy import Vector
 from dotenv import load_dotenv
@@ -31,7 +30,7 @@ class Embedding(Base):
     
     embedding_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    embedding = Column(Vector(320), nullable=False)
+    embedding = Column(Vector(512), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     user = relationship("User", back_populates="embeddings")
