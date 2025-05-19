@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from pathlib import Path
+# from pathlib import Path
 def get_chess_grandmasters():
     grandmasters = []
     
@@ -14,6 +14,3 @@ def get_chess_grandmasters():
             
             for tag in username_tags:
                 grandmasters.append(tag.text.strip())
-        
-    for gm in grandmasters:
-        fetch()

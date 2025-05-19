@@ -8,11 +8,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-engine = create_engine(os.getenv('AWS_RDS'))
+DATABASE_URL = ""
+
+if 'RDS_DB_NAME' in os.environ:
+    DATABASE_URL = 'postgresql://{username}:{password}@{host}:{port}/{database}'.format(
+            username=os.environ['RDS_USERNAME'],
+            password=os.environ['RDS_PASSWORD'],
+            host=os.environ['RDS_HOSTNAME'],
+            port=os.environ['RDS_PORT'],
+            database=os.environ['RDS_DB_NAME'],
+        )
+elif 'AWS_RDS' in os.environ:
+        DATABASE_URL = os.getenv('AWS_RDS')
+    
+if not DATABASE_URL:
+    exit()
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# User model with new fields
 class User(Base):
     __tablename__ = "users"
     
@@ -35,7 +50,6 @@ class Embedding(Base):
     
     user = relationship("User", back_populates="embeddings")
 
-# Create tables
 Base.metadata.create_all(bind=engine)
 
 def get_db():
