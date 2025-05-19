@@ -1,5 +1,0 @@
-myenv/
-__pycache__/
-*.pyc
-.git/
-.elasticbeanstalk/app_versions/
