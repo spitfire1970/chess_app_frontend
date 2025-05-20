@@ -18,6 +18,11 @@ const [similarity, setSimilarity] = useState(0)
 
 console.log('refresh')
 const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : process.env.NEXT_PUBLIC_API_URL_DEPLOYED
+const axiosInstance = axios.create({
+  baseURL: API,
+  withCredentials: true,
+});
+
 
 useEffect(() => {console.log(API)}, [])
 
@@ -34,7 +39,7 @@ const add_user = (e: React.FormEvent<HTMLFormElement>) => {
     platform: "chess.com",
     is_grandmaster: false
 };
-    axios.post(`${API}/create_username`, request_obj)
+    axiosInstance.post('/create_username', request_obj)
       .then(response => {
         console.log(response.data.message)
         setCreation(response.data.message)
@@ -50,7 +55,7 @@ const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
   if (!loading && p1 && p2) {
     setMode('similarity')
     setLoading(true)
-    axios.get(`${API}/player_similarity?player1=${p1}&player2=${p2}`)
+    axiosInstance.get(`/player_similarity?player1=${p1}&player2=${p2}`)
       .then(response => {
         setSimilarity(response.data.similarity)
       })
