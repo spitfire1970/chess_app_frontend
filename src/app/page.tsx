@@ -20,7 +20,7 @@ console.log('refresh')
 const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : process.env.NEXT_PUBLIC_API_URL_DEPLOYED
 const axiosInstance = axios.create({
   baseURL: API,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 
