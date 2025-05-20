@@ -5,7 +5,7 @@ const api = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : 
 export async function GET(
   request: NextRequest,
   { params }: { params: { path: string[] } }
-) {
+): Promise<Response> {
   params = await params
   const path = params.path.join('/');
   const url = new URL(request.url);
@@ -24,7 +24,7 @@ export async function GET(
 export async function POST(
   request: NextRequest,
   { params }: { params: { path: string[] } }
-) {
+): Promise<Response> {
   params = await params
   const path = params.path.join('/');
   const body = await request.json();
