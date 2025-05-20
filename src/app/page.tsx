@@ -21,7 +21,7 @@ const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : 
 
 useEffect(() => {console.log(API)}, [])
 
-const add_user = (e) => {
+const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
    console.log('adding user',username )
    console.log('adding user',loading )
@@ -43,7 +43,7 @@ const add_user = (e) => {
   }
 };
 
-const player_similarity = (e) => {
+const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
    e.preventDefault()
    console.log('comparing players', p1)
    console.log('comparing players',loading )
