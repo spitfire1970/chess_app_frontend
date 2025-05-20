@@ -17,7 +17,7 @@ const [similarity, setSimilarity] = useState(0)
 
 
 console.log('refresh')
-const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : process.env.NEXT_PUBLIC_API_URL_DEPLOYED
+const API = '/api/proxy'
 const axiosInstance = axios.create({
   baseURL: API,
   withCredentials: false,
