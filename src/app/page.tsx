@@ -4,16 +4,20 @@ import {useState, useEffect} from "react"
 import axios from 'axios';
 import MyInput from "../components/my_input";
 import MyForm from "../components/my_form";
+import MyTable from "../components/my_table";
+
 
 const Home = () => {
 
 const [username, setUsername] = useState("")
+const [username_gm, setUsername_gm] = useState("")
 const [mode, setMode] = useState("closest")
 const [loading, setLoading] = useState(false)
 const [p1, setP1] = useState("")
 const [p2, setP2] = useState("")
 const [creation, setCreation] = useState("")
 const [similarity, setSimilarity] = useState(0)
+const [gm_list, setGm_list] = useState("")
 
 
 console.log('refresh')
@@ -28,8 +32,6 @@ useEffect(() => {console.log(API)}, [])
 
 const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
-   console.log('adding user',username )
-   console.log('adding user',loading )
   if (!loading && username) {
     setMode('create')
     setLoading(true)
@@ -48,10 +50,24 @@ const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   }
 };
 
+const closest_gms = (e: React.FormEvent<HTMLFormElement>) => {
+   e.preventDefault()
+  if (!loading && username_gm) {
+    setMode('gms')
+    setLoading(true)
+    axiosInstance.get(`/similar_players/${username_gm}`)
+      .then(response => {
+        setGm_list(response.data.similar_players)
+      })
+      .catch(error => {
+        console.log('error in closest gm')
+      })
+      .finally(()=>setLoading(false));
+  }
+};
+
 const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
    e.preventDefault()
-   console.log('comparing players', p1)
-   console.log('comparing players',loading )
   if (!loading && p1 && p2) {
     setMode('similarity')
     setLoading(true)
@@ -88,6 +104,25 @@ return (
     </div>
 
     <div className = "flex flex-col items-center">
+      <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you:</h2>
+      <MyForm f = {closest_gms}>
+        <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
+      </MyForm>
+      {
+        mode === "gms" &&
+        (
+          gm_list ?
+        <div className = "text-white mt-2">
+          <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
+        </div> :
+        <div className = "text-red-500 mt-2">
+            Couldn't find you in our database!
+        </div>
+        )
+      }
+    </div>
+
+    <div className = "flex flex-col items-center">
       <h2 className="mb-4">Quantify the similarity between any two players:</h2>
       <MyForm f = {player_similarity}>
         <MyInput f = {setP1} value = {p1} placeholder = "Player 1 username"/>
@@ -106,6 +141,9 @@ return (
         )
       }
     </div>
+  </div>
+    <div className="fixed right-0 left-0 bottom-5 text-xl text-center">
+   This uses the research and models I<sup className = "text-xs">(<a href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup> trained during my dissertation project at UCL 🏛️!
   </div>
 </div>
 )
