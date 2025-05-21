@@ -17,7 +17,7 @@ const [p1, setP1] = useState("")
 const [p2, setP2] = useState("")
 const [creation, setCreation] = useState("")
 const [similarity, setSimilarity] = useState(0)
-const [gm_list, setGm_list] = useState("")
+const [gm_list, setGm_list] = useState([])
 
 
 console.log('refresh')
@@ -61,6 +61,7 @@ const closest_gms = (e: React.FormEvent<HTMLFormElement>) => {
       })
       .catch(error => {
         console.log('error in closest gm')
+        setGm_list([])
       })
       .finally(()=>setLoading(false));
   }
@@ -112,7 +113,7 @@ return (
         {
           mode === "gms" &&
           (
-            gm_list ?
+            gm_list.length > 0 ?
           <div className = "text-white mt-2">
             <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
           </div> :
