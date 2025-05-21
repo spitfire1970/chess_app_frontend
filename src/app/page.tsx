@@ -84,70 +84,73 @@ const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 return (
-<div className = "bg-black p-4 text-white font-mono">
-  <h1 className="m-8 mb-16 text-4xl text-center">
-    It's time we reap the benefits of advancements in AI to make chess more fun
-  </h1>
+<div className = "min-h-screen bg-black p-4 text-white font-mono flex flex-col">
+  <div className = "flex-grow">
+    <h1 className="m-8 mb-16 text-2xl md:text-4xl text-center">
+      It's time we reap the recent advancements in AI to make chess more interesting
+    </h1>
 
-  <div className = "flex flex-col items-center gap-12 w-screen">
-    <div className = "flex flex-col items-center">
-      <h2 className="mb-4">Enter your account into our database:</h2>
-      <MyForm f = {add_user}>
-        <MyInput f = {setUsername} value = {username} placeholder = "Chess.com username"/>
-      </MyForm>
-      {
-        mode === "create" &&
-        <div className = "text-green mt-2">
-            {creation}
-        </div>
-      }
-    </div>
-
-    <div className = "flex flex-col items-center">
-      <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you:</h2>
-      <MyForm f = {closest_gms}>
-        <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
-      </MyForm>
-      {
-        mode === "gms" &&
-        (
-          gm_list ?
-        <div className = "text-white mt-2">
-          <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
-        </div> :
-        <div className = "text-red-500 mt-2">
-            Couldn't find you in our database!
-        </div>
-        )
-      }
-    </div>
-
-    <div className = "flex flex-col items-center">
-      <h2 className="mb-4">Quantify the similarity between any two players:</h2>
-      <MyForm f = {player_similarity}>
-        <MyInput f = {setP1} value = {p1} placeholder = "Player 1 username"/>
-        <MyInput f = {setP2} value = {p2} placeholder = "Player 2 username"/>
-      </MyForm>
-      {
-        mode === "similarity" &&
-        (
-          similarity == 0 ?
-          <div className = "text-red-500 mt-2">
-            Couldn't find at least one of the users. Please first add them to our database!
-          </div> :
-          <div className = "text-green-700 mt-2">
-            Similarity score: {similarity.toFixed(2)}
+    <div className = "flex flex-col items-center gap-12 w-screen">
+      <div className = "flex flex-col items-center">
+        <h2 className="mb-4">Enter your account into our database:</h2>
+        <MyForm f = {add_user}>
+          <MyInput f = {setUsername} value = {username} placeholder = "Chess.com username"/>
+        </MyForm>
+        {
+          mode === "create" &&
+          <div className = "text-green mt-2">
+              {creation}
           </div>
-        )
-      }
+        }
+      </div>
+
+      <div className = "flex flex-col items-center">
+        <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you:</h2>
+        <MyForm f = {closest_gms}>
+          <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
+        </MyForm>
+        {
+          mode === "gms" &&
+          (
+            gm_list ?
+          <div className = "text-white mt-2">
+            <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
+          </div> :
+          <div className = "text-red-500 mt-2">
+              Couldn't find you in our database!
+          </div>
+          )
+        }
+      </div>
+
+      <div className = "flex flex-col items-center">
+        <h2 className="mb-4">Quantify the similarity between any two players:</h2>
+        <MyForm f = {player_similarity}>
+          <MyInput f = {setP1} value = {p1} placeholder = "Player 1 username"/>
+          <MyInput f = {setP2} value = {p2} placeholder = "Player 2 username"/>
+        </MyForm>
+        {
+          mode === "similarity" &&
+          (
+            similarity == 0 ?
+            <div className = "text-red-500 mt-2">
+              Couldn't find at least one of the users. Please first add them to our database!
+            </div> :
+            <div className = "text-green-700 mt-2">
+              Similarity score: {similarity.toFixed(2)}
+            </div>
+          )
+        }
+      </div>
     </div>
   </div>
-    <div className="fixed right-0 left-0 bottom-5 text-xl text-center">
-   This uses the research and models I
-   <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup>
-   &nbsp;trained during my dissertation project at UCL 🏛️!
-  </div>
+  <footer className="text-l mb-4 mt-8 text-center">
+    This uses the research and models I
+    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup>
+    &nbsp;trained during my dissertation project at UCL 🏛️!
+  </footer>
 </div>
+
 )
 }
 
