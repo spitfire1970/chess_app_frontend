@@ -143,12 +143,12 @@ return (
     </div>
   </div>
     <div className="fixed right-0 left-0 bottom-5 text-xl text-center">
-   This uses the research and models I<sup className = "text-xs">(<a href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup> trained during my dissertation project at UCL 🏛️!
+   This uses the research and models I
+   <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup>
+   &nbsp;trained during my dissertation project at UCL 🏛️!
   </div>
 </div>
 )
-
-  
 }
 
 export default Home

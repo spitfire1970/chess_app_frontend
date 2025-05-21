@@ -11,7 +11,7 @@ function MyForm({f, children, ...props}: MyFormProps): React.ReactElement {
         <div className = "flex flex-col gap-2">
           {children}
         </div>
-        <button type="submit" className = "h-10 bg-slate-500 hover:bg-slate-700 text-white py-2 px-4 rounded">Search</button>
+        <button type="submit" className = "h-10 bg-slate-500 hover:bg-slate-700 text-white py-2 px-4 rounded">Enter</button>
       </div>
     </form>
 
