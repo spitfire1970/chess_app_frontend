@@ -147,7 +147,7 @@ return (
   </div>
   <footer className="text-l mb-4 mt-8 text-center">
     This uses the research and models I
-    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400">@nakul.one</text></a>)</sup>
+    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400 hover:underline">@nakul.one</text></a>)</sup>
     &nbsp;trained during my dissertation project at UCL 🏛️!
   </footer>
 </div>
