@@ -20,7 +20,7 @@ console.log('refresh')
 const API = '/api/proxy'
 const axiosInstance = axios.create({
   baseURL: API,
-  withCredentials: false,
+  withCredentials: true,
 });
 
 
