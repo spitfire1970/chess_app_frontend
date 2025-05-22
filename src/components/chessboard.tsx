@@ -49,7 +49,7 @@ export default function ChessBoard({username}: {username: string}) {
       } else {
         setStatus('Game over! Draw.');
       }
-    } else {
+    } else if (!status.startsWith("Enter")) {
       setStatus(`${game.turn() === 'w' ? 'White' : 'Black'} to move${game.isCheck() ? ' (Check)' : ''}`);
     }
   }
@@ -85,7 +85,7 @@ export default function ChessBoard({username}: {username: string}) {
       })
       .catch(error => {
         console.log('user not found. resetting game')
-        resetGame("Please first enter a username above!")
+        resetGame("Enter a username above to play against!")
       })
       }, 500);
     });
