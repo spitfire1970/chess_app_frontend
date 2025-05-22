@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Chess, Square } from 'chess.js';
-import Image from 'next/image';
+import axios from 'axios';
 
 // Simple type for chess pieces
 type ChessPiece = {
   type: 'p' | 'n' | 'b' | 'r' | 'q' | 'k';
   color: 'w' | 'b';
 };
+const API = '/api/proxy'
+const axiosInstance = axios.create({
+  baseURL: API,
+  withCredentials: true,
+});
 
-export default function ChessBoard() {
+export default function ChessBoard({username}: {username: string}) {
   // Initialize chess.js instance
   const [game, setGame] = useState<Chess>(new Chess());
   const [board, setBoard] = useState<Array<Array<{square: string, piece: ChessPiece | null}>>>(getBoard());
@@ -52,14 +57,10 @@ export default function ChessBoard() {
   // Handle AI/computer move
   async function makeComputerMove() {
     try {
-      // Replace this with your actual agent function
       const agentMove = await getComputerMove(game.fen());
-      
-      if (agentMove && agentMove.length >= 4) {
-        const from = agentMove.substring(0, 2) as Square;
-        const to = agentMove.substring(2, 4) as Square;
-        
-        game.move({ from, to, promotion: 'q' });
+      console.log('agent move', agentMove)
+      if (agentMove) {
+        game.move(agentMove);
         updateGameState();
       }
     } catch (error) {
@@ -67,19 +68,25 @@ export default function ChessBoard() {
     }
   }
   
-  // Placeholder for the agent function
   async function getComputerMove(fen: string): Promise<string> {
-    // Replace this with your actual agent implementation
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Just a placeholder - your agent function would go here
-        const moves = game.moves({ verbose: true });
-        if (moves.length > 0) {
-          const randomMove = moves[Math.floor(Math.random() * moves.length)];
-          resolve(`${randomMove.from}${randomMove.to}`);
-        } else {
-          resolve("");
-        }
+        const pgn = game.pgn()
+        console.log('pgn', pgn)
+        const request_obj = {
+        chess_username: username,
+        pgn_string: pgn,
+        color: 'black'
+    };
+    axiosInstance.post('/ai_move', request_obj)
+      .then(response => {
+        console.log('ai_move', response.data.ai_move)
+        resolve(response.data.ai_move)
+      })
+      .catch(error => {
+        console.log('user not found. resetting game')
+        resetGame("Please first enter a username above!")
+      })
       }, 500);
     });
   }
@@ -88,26 +95,28 @@ export default function ChessBoard() {
   async function makeMove(from: Square, to: Square) {
     try {
       // Try to make the move
-      const illegal = game.move({ from, to, promotion: 'q' });
+      game.move({ from, to, promotion: 'q' });
+
       updateGameState();
       
       // If game isn't over, make the computer move
       if (!game.isGameOver()) {
         await makeComputerMove();
       }
+      return true
     } catch (error) {
-      console.error("Invalid move:", error);
+        console.log('illegal move')
+        return false
     }
   }
   
   // Handle square click
-  const handleSquareClick = (squareStr: string) => {
+  async function handleSquareClick(squareStr: string) {
     if (!game.isGameOver()) {
       const square = squareStr as Square;
-      
-      if (selectedSquare) {
-        // If a square is already selected, try to make a move
-        makeMove(selectedSquare as Square, square);
+
+      // If a square is already selected, try to make a move
+      if (selectedSquare && await makeMove(selectedSquare as Square, square)) {
         setSelectedSquare(null);
       } else {
         // If no square is selected, select it if it has a piece of current turn
@@ -128,12 +137,12 @@ export default function ChessBoard() {
   };
   
   // Reset the game
-  const resetGame = () => {
+  const resetGame = (message:string) => {
     const newGame = new Chess();
     setGame(newGame);
     setBoard(getBoard());
-    setStatus('White to move');
     setSelectedSquare(null);
+    setStatus(message);
   };
   
   // Update board when game changes
@@ -178,8 +187,8 @@ export default function ChessBoard() {
       </div>
       
       <button 
-        onClick={resetGame}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        onClick={() => {resetGame("white to move")}}
+        className="mt-4 px-4 py-2 bg-slate-500 text-white rounded hover:bg-slate-700"
       >
         Reset Game
       </button>

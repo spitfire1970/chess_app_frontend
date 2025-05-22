@@ -36,7 +36,7 @@ const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   if (!loading && username) {
     setMode('create')
     setLoading(true)
-    setCreation('creating...')
+    setCreation('creating player embedding...')
     const request_obj = {
     chess_username: username,
     platform: "chess.com",
@@ -86,45 +86,48 @@ const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 return (
-<div className = "min-h-screen bg-black p-4 text-white font-mono flex flex-col">
+<div className = "min-h-screen bg-black p-4 text-white font-mono md:text-justify text-center flex flex-col">
   <div className = "flex-grow">
     <h1 className="m-8 mb-16 text-2xl md:text-4xl text-center">
       It's time we reap the recent advancements in AI to make chess more interesting
     </h1>
-
-    <div className = "flex flex-col items-center gap-12 w-screen">
-      <div className = "flex flex-col items-center">
-        <h2 className="mb-4">Enter your account into our database:</h2>
-        <MyForm f = {add_user}>
-          <MyInput f = {setUsername} value = {username} placeholder = "Chess.com username"/>
-        </MyForm>
-        {
-          mode === "create" &&
-          <div className = "text-green mt-2">
-              {creation}
-          </div>
-        }
+    <div className = "flex flex-col md:flex-row items-center justify-evenly sm:mr-24">
+      <div className = "flex flex-col items-center gap-12 w-screen">
+        <div className = "flex flex-col items-center">
+          <h2 className="mb-4">Enter Chess.com username<sup>*</sup>:</h2>
+          <MyForm f = {add_user}>
+            <MyInput f = {setUsername} value = {username} placeholder = "Chess.com username"/>
+          </MyForm>
+          {
+            mode === "create" &&
+            <div className = "text-green mt-2 w-8/10">
+                {creation}. {!loading && <>Check out the {username}-styled bot below</>}
+            </div>
+          }
+        </div>
+        <div>
+          <ChessBoard username = {username}/>
+        </div>
       </div>
-
-      <div className = "flex flex-col items-center">
-        <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you:</h2>
-        <MyForm f = {closest_gms}>
-          <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
-        </MyForm>
-        {
-          mode === "gms" &&
-          (
-            gm_list.length > 0 ?
-          <div className = "text-white mt-2">
-            <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
-          </div> :
-          <div className = "text-red-500 mt-2">
-              Couldn't find you in our database!
-          </div>
-          )
-        }
+      <div className = "flex flex-col gap-12 md:my-0 my-12 items-center">
+        <div className = "flex flex-col items-center">
+          <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you (or someone else):</h2>
+          <MyForm f = {closest_gms}>
+            <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
+          </MyForm>
+          {
+            mode === "gms" &&
+            (
+              gm_list.length > 0 ?
+            <div className = "text-white mt-2">
+              <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
+            </div> :
+            <div className = "text-red-500 mt-2">
+                Couldn't find this user in our database!
+            </div>
+            )
+          }
       </div>
-
       <div className = "flex flex-col items-center">
         <h2 className="mb-4">Quantify the similarity between any two players:</h2>
         <MyForm f = {player_similarity}>
@@ -143,16 +146,19 @@ return (
             </div>
           )
         }
-      </div>
-      <div>
-        <ChessBoard />
+        </div>
       </div>
     </div>
   </div>
-  <footer className="text-l mb-4 mt-8 text-center">
+  <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
+    <div className="text-l">
     This uses the research and models I
     <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400 hover:underline">@nakul.one</text></a>)</sup>
     &nbsp;trained during my dissertation project at UCL 🏛️!
+    </div>
+    <div className="text-xs">
+      <sup>*</sup>You consent to the use of your chess.com game data for the generation of results for you (and potentially others)
+    </div>
   </footer>
 </div>
 
