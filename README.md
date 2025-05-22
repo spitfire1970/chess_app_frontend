@@ -1,1 +1,2 @@
-npm run dev
+- npm run dev
+- https://main.d35f6rsacdh2vo.amplifyapp.com/

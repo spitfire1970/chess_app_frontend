@@ -2,9 +2,10 @@
 
 import {useState, useEffect} from "react"
 import axios from 'axios';
-import MyInput from "../components/my_input";
-import MyForm from "../components/my_form";
-import MyTable from "../components/my_table";
+import MyInput from "@/components/my_input";
+import MyForm from "@/components/my_form";
+import MyTable from "@/components/my_table";
+import ChessBoard from "@/components/chessboard";
 
 
 const Home = () => {
@@ -142,6 +143,9 @@ return (
             </div>
           )
         }
+      </div>
+      <div>
+        <ChessBoard />
       </div>
     </div>
   </div>
