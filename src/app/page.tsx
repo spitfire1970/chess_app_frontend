@@ -28,9 +28,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-
-useEffect(() => {console.log(API)}, [])
-
 const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
   if (!loading && username) {
@@ -44,7 +41,6 @@ const add_user = (e: React.FormEvent<HTMLFormElement>) => {
 };
     axiosInstance.post('/create_username', request_obj)
       .then(response => {
-        console.log(response.data.message)
         setCreation(response.data.message)
       })
       .finally(()=>setLoading(false));
@@ -96,7 +92,7 @@ return (
         <div className = "flex flex-col items-center">
           <h2 className="mb-4">Enter Chess.com username<sup>*</sup>:</h2>
           <MyForm f = {add_user}>
-            <MyInput f = {setUsername} value = {username} placeholder = "Chess.com username"/>
+            <MyInput f = {setUsername} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
           </MyForm>
           {
             mode === "create" &&
@@ -106,7 +102,7 @@ return (
           }
         </div>
         <div>
-          <ChessBoard username = {username}/>
+          <ChessBoard username = {username} mode = {mode}/>
         </div>
       </div>
       <div className = "flex flex-col gap-12 md:my-0 my-12 items-center">
@@ -120,7 +116,7 @@ return (
             (
               gm_list.length > 0 ?
             <div className = "text-white mt-2">
-              <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list}/>
+              <MyTable headings = {["Username", "Similarity"]} attribute_list = {["username", "similarity"]} entries = {gm_list} link = "https://chess.com/members/"/>
             </div> :
             <div className = "text-red-500 mt-2">
                 Couldn't find this user in our database!
@@ -153,7 +149,7 @@ return (
   <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
     <div className="text-l">
     This uses the research and models I
-    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-orange-400 hover:underline">@nakul.one</text></a>)</sup>
+    <sup className = "text-xs">(<a href="https://nakul.one"><text className="text-orange-400 hover:underline">@nakul.one</text></a>)</sup>
     &nbsp;trained during my dissertation project at UCL 🏛️!
     </div>
     <div className="text-xs">
