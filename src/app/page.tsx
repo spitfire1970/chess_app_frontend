@@ -1,6 +1,6 @@
 "use client"
 
-import {useState, useEffect} from "react"
+import {useState} from "react"
 import axios from 'axios';
 import MyInput from "@/components/my_input";
 import MyForm from "@/components/my_form";
@@ -92,7 +92,7 @@ return (
         <div className = "flex flex-col items-center">
           <h2 className="mb-4">Enter Chess.com username<sup>*</sup>:</h2>
           <MyForm f = {add_user}>
-            <MyInput f = {setUsername} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
+            <MyInput f = {(e) => {setUsername(e); setMode("")}} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
           </MyForm>
           {
             mode === "create" &&
@@ -149,7 +149,7 @@ return (
   <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
     <div className="text-l">
     This uses the research and models I
-    <sup className = "text-xs">(<a href="https://nakul.one"><text className="text-orange-400 hover:underline">@nakul.one</text></a>)</sup>
+    <sup className = "text-xs">(<a href="https://nakul.one"><text className="text-pumpkin hover:underline">@nakul.one</text></a>)</sup>
     &nbsp;trained during my dissertation project at UCL 🏛️!
     </div>
     <div className="text-xs">

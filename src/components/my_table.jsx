@@ -14,7 +14,7 @@ function MyTable({headings, attribute_list, entries, link}) {
             {attribute_list.map((attribute, colIndex) => (
                 (typeof entry[attribute] === "number") ?
                 <td key={colIndex} className="text-center"> {entry[attribute].toFixed(3)} </td> :
-                <td key={colIndex}><a target="_blank" rel="noopener noreferrer" href = {link + entry[attribute]} className = "hover:underline decoration-inherit">{entry[attribute]}</a></td>
+                <td key={colIndex}><a target="_blank" rel="noopener noreferrer" href = {link + entry[attribute]} className = "hover:underline hover:text-aqua">{entry[attribute]}</a></td>
             ))}
           </tr>
         ))}
