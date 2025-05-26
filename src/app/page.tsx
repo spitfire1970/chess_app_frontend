@@ -149,7 +149,7 @@ return (
   <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
     <div className="text-l">
     This uses the research and models I
-    <sup className = "text-xs">(<a href="https://nakul.one"><text className="text-pumpkin hover:underline">@nakul.one</text></a>)</sup>
+    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-pumpkin hover:underline">@nakul.one</text></a>)</sup>
     &nbsp;trained during my dissertation project at UCL 🏛️!
     </div>
     <div className="text-xs">
