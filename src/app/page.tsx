@@ -150,7 +150,8 @@ return (
     <div className="text-l">
     This uses the research and models I
     <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-pumpkin hover:underline">@nakul.one</text></a>)</sup>
-    &nbsp;trained during my dissertation project at UCL 🏛️!
+    &nbsp;trained during my dissertation<sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/10MBqIZcL-eZBBmhYFbQtngBaTqm3ow2A/view"><text className="text-pumpkin hover:underline">@abstract</text></a>)</sup>
+    &nbsp;project at UCL 🏛️!
     </div>
     <div className="text-xs">
       <sup>*</sup>You consent to the use of your chess.com game data for the generation of results for you (and potentially others)
