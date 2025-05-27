@@ -19,6 +19,7 @@ const [p2, setP2] = useState("")
 const [creation, setCreation] = useState("")
 const [similarity, setSimilarity] = useState(0)
 const [gm_list, setGm_list] = useState([])
+const [showNote, setShowNote] = useState(true);
 
 
 console.log('refresh')
@@ -101,8 +102,21 @@ return (
             </div>
           }
         </div>
-        <div>
-          <ChessBoard username = {username} mode = {mode}/>
+        <div className="relative">
+          {showNote && (
+            <div className="absolute top-85 left-10 -rotate-20 md:top-80 md:left-40 md:-rotate-20 w-1/2 bg-black text-yellow-300 px-3 py-2 rounded-br shadow z-10 text-xs relative">
+              <button
+                className="absolute top-0 left-2 text-yello-300 hover:text-red-600 font-bold text-base"
+                onClick={() => setShowNote(false)}
+              >
+                ×
+              </button>
+              <span className="pl-4 pr-2">
+                please give my backend about 20s to wake up initially! inference on GPU isn't free :))
+              </span>
+            </div>
+          )}
+          <ChessBoard username={username} mode={mode} />
         </div>
       </div>
       <div className = "flex flex-col gap-12 md:my-0 my-12 items-center">
