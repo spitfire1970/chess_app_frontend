@@ -29,54 +29,31 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const GPU = '/gpu/proxy'
-const axiosInstanceGPU = axios.create({
-  baseURL: GPU,
-  withCredentials: true,
-});
-
 useEffect(() => {
-  let isMounted = true;
-
-  const checkServerAwake = async () => {
-    while (isMounted && !serverAwake) {
+  const wakeServer = async () => {
       try {
-        const response = await axiosInstanceGPU.post(
-          '/',
-          { inputs: { endpoint_num: 0 } },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-                    'Accept': 'application/json',  // 🔧 this fixes it
-              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_HF_ACCESS_TOKEN}`,
-            },
-          }
-        );
-        if (response.data.reply === "hello from inference api!!" && isMounted) {
-  setServerAwake(true);
-}
+        const res = await fetch(`/gpu/proxy/${process.env.NEXT_PUBLIC_GPU_URL_DEPLOYED}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_HF_ACCESS_TOKEN}`
+          },
+          body: JSON.stringify({ inputs: { endpoint_num: 0 } }),
+        });
 
-        if (response.data.reply === "hello from inference api!!") {
-          if (isMounted) {
-            setServerAwake(true);
-          }
-          break;
+        const data = await res.json();
+        if (data.reply === "hello from inference api!!") {
+          setServerAwake(true);
         }
-
-      } catch (err: any) {
-        console.error("Server not ready:", err?.response?.data || err);
+      } catch (err) {
+        console.error("Server wake-up failed:", err);
+        setServerAwake(true) // change this later
+      } finally {
+        setServerAwake(true); // Hide spinner regardless
       }
-
-      await new Promise((r) => setTimeout(r, 1500));
     }
-  };
-
-  checkServerAwake();
-  return () => {
-    isMounted = false;
-  };
+  wakeServer();
 }, []);
-
 
 const add_user = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
