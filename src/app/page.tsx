@@ -21,6 +21,8 @@ const [similarity, setSimilarity] = useState(0)
 const [gm_list, setGm_list] = useState([])
 const [showNote, setShowNote] = useState(true);
 const [serverAwake, setServerAwake] = useState(false);
+const [count, setCount] = useState(0);
+
 
 console.log('refresh')
 const API = '/api/proxy'
@@ -47,7 +49,7 @@ useEffect(() => {
           {
             headers: {
               'Content-Type': 'application/json',
-                    'Accept': 'application/json',  // 🔧 this fixes it
+                    'Accept': 'application/json',
               'Authorization': `Bearer ${process.env.NEXT_PUBLIC_HF_ACCESS_TOKEN}`,
             },
           }
@@ -67,7 +69,9 @@ useEffect(() => {
         console.error("Server not ready:", err?.response?.data || err);
       }
 
-      await new Promise((r) => setTimeout(r, 1500));
+      setTimeout(() => {
+      setCount(prevCount => prevCount + 1);
+    }, 1000);
     }
   };
 
@@ -130,12 +134,15 @@ const player_similarity = (e: React.FormEvent<HTMLFormElement>) => {
       .finally(()=>setLoading(false));
   }
 };
-
 if (!serverAwake) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-black text-white">
       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white" />
-      <p className="ml-4">Waking up server, please wait...</p>
+      <div className="ml-4">
+        Waking up server: {count}s (estimated 20s)
+        <br></br>
+        Inference on GPU isn't free :)
+      </div>
     </div>
   );
 }
@@ -162,15 +169,15 @@ return (
         </div>
         <div className="relative">
           {showNote && (
-            <div className="absolute top-85 left-10 -rotate-20 md:top-80 md:left-40 md:-rotate-20 w-1/2 bg-black text-yellow-300 px-3 py-2 rounded-br shadow z-10 text-xs relative">
+            <div className="absolute -top-10 -left-0 -rotate-10 md:-top-30 md:-left-35 md:-rotate-35 w-1/2 bg-black text-pumpkin px-3 py-2 rounded-br shadow z-10 text-xs relative">
               <button
-                className="absolute top-0 left-2 text-yello-300 hover:text-red-600 font-bold text-base"
+                className="absolute top-0 left-2 text-aqua hover:text-red-600 font-bold text-base"
                 onClick={() => setShowNote(false)}
               >
                 ×
               </button>
               <span className="pl-4 pr-2">
-                please give my backend about 20s to wake up initially! inference on GPU isn't free :))
+                creating a new user may take upto 2 minutes!
               </span>
             </div>
           )}
@@ -221,8 +228,8 @@ return (
   <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
     <div className="text-l">
     This uses the research and models I
-    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><text className="text-pumpkin hover:underline">@nakul.one</text></a>)</sup>
-    &nbsp;trained during my dissertation<sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/10MBqIZcL-eZBBmhYFbQtngBaTqm3ow2A/view"><text className="text-pumpkin hover:underline">@abstract</text></a>)</sup>
+    <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><span className="text-pumpkin hover:underline">@nakul.one</span></a>)</sup>
+    &nbsp;trained during my dissertation<sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/10MBqIZcL-eZBBmhYFbQtngBaTqm3ow2A/view"><span className="text-pumpkin hover:underline">@abstract</span></a>)</sup>
     &nbsp;project at UCL 🏛️!
     </div>
     <div className="text-xs">
