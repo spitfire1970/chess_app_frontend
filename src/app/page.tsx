@@ -139,7 +139,7 @@ if (!serverAwake) {
     <div className="flex items-center justify-center min-h-screen bg-black text-white">
       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white" />
       <div className="ml-4">
-        Waking up server: {count}s (estimated 20s)
+        Waking up server: {count}s (estimated 25s)
         <br></br>
         Inference on GPU isn't free :)
       </div>
