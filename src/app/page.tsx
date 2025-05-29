@@ -158,7 +158,7 @@ return (
         <div className = "flex flex-col items-center">
           <h2 className="mb-4">Enter Chess.com username<sup>*</sup>:</h2>
           <MyForm f = {add_user}>
-            <MyInput f = {(e) => {setUsername(e); setMode("")}} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
+            <MyInput setValue = {(e) => {setUsername(e); setMode("")}} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
           </MyForm>
           {
             mode === "create" &&
@@ -176,8 +176,8 @@ return (
               >
                 ×
               </button>
-              <span className="pl-4 pr-2">
-                creating a new user may take upto 2 minutes!
+              <span className="block break-words max-w-[200px] pl-4 pr-2 text-justify">
+                  creating a new user may take upto 2 minutes!
               </span>
             </div>
           )}
@@ -188,7 +188,7 @@ return (
         <div className = "flex flex-col items-center">
           <h2 className="mb-4">Find out the top 10 stylistically similar grandmasters as you (or someone else):</h2>
           <MyForm f = {closest_gms}>
-            <MyInput f = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
+            <MyInput setValue = {setUsername_gm} value = {username_gm} placeholder = "Chess.com username"/>
           </MyForm>
           {
             mode === "gms" &&
@@ -206,8 +206,8 @@ return (
       <div className = "flex flex-col items-center">
         <h2 className="mb-4">Quantify the similarity between any two players:</h2>
         <MyForm f = {player_similarity}>
-          <MyInput f = {setP1} value = {p1} placeholder = "Player 1 username"/>
-          <MyInput f = {setP2} value = {p2} placeholder = "Player 2 username"/>
+          <MyInput setValue = {setP1} value = {p1} placeholder = "Player 1 username"/>
+          <MyInput setValue = {setP2} value = {p2} placeholder = "Player 2 username"/>
         </MyForm>
         {
           mode === "similarity" &&

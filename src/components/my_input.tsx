@@ -1,19 +1,81 @@
-import React, { ChangeEvent, InputHTMLAttributes } from 'react';
+// components/AutoCompleteInput.tsx
+"use client"
 
-interface MyInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+
+interface AutoCompleteInputProps {
+  value: string;
+  setValue: (val: string) => void;
   placeholder?: string;
-  f: (value: string) => void;
 }
 
-function MyInput({ placeholder, f, ...props }: MyInputProps): React.ReactElement {
+const MyInput = ({ value, setValue, placeholder = "" }: AutoCompleteInputProps) => {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (value.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    const fetchSuggestions = async () => {
+      try {
+        const response = await axios.get(`/api/proxy/autocomplete_usernames`, {
+          params: { query: value }
+        });
+        setSuggestions(response.data);
+      } catch (err) {
+        console.error("Failed to fetch suggestions:", err);
+      }
+    };
+
+    fetchSuggestions();
+  }, [value]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <input
-      placeholder={placeholder}
-      onChange={(e: ChangeEvent<HTMLInputElement>) => f(e.target.value)}
-      className="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" 
-      {...props}
-    />
+    <div className="relative w-full" ref={dropdownRef}>
+      <input
+        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring focus:ring-pumpkin"
+        type="text"
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setShowDropdown(true);
+        }}
+        onFocus={() => setShowDropdown(true)}
+      />
+      {showDropdown && suggestions.length > 0 && (
+        <ul className="absolute z-10 bg-black border border-gray-700 w-full mt-1 rounded shadow-lg max-h-48 overflow-y-auto">
+          {suggestions.map((s, idx) => (
+            <li
+              key={idx}
+              onClick={() => {
+                setValue(s);
+                setShowDropdown(false);
+              }}
+              className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+            >
+              {s}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
-}
+};
 
 export default MyInput;
