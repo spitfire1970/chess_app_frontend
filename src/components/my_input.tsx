@@ -23,9 +23,7 @@ const MyInput = ({ value, setValue, placeholder = "" }: AutoCompleteInputProps) 
 
     const fetchSuggestions = async () => {
       try {
-        const response = await axios.get(`/api/proxy/autocomplete_usernames`, {
-          params: { query: value }
-        });
+        const response = await axios.get(`/api/proxy/autocomplete_usernames?query=${value}`);
         setSuggestions(response.data);
       } catch (err) {
         console.error("Failed to fetch suggestions:", err);
