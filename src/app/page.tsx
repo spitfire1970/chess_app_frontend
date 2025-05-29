@@ -171,7 +171,7 @@ return (
           {showNote && (
             <div className="absolute -top-10 -left-0 -rotate-10 md:-top-30 md:-left-35 md:-rotate-35 w-1/2 bg-black text-pumpkin px-3 py-2 rounded-br shadow z-10 text-xs relative">
               <button
-                className="absolute top-0 left-2 text-aqua hover:text-red-600 font-bold text-base"
+                className="absolute top-0 left-2 text-pumpkin hover:text-red-600 font-bold text-base"
                 onClick={() => setShowNote(false)}
               >
                 ×
