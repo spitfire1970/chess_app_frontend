@@ -156,7 +156,21 @@ return (
     <div className = "flex flex-col md:flex-row items-center justify-evenly sm:mr-24">
       <div className = "flex flex-col items-center gap-12 w-screen">
         <div className = "flex flex-col items-center">
-          <h2 className="mb-4">Enter Chess.com username<sup>*</sup>:</h2>
+          <h2 className="mb-">Enter Chess.com username<sup>*</sup>:</h2>
+          {!showNote && <div className = "mb-4"></div>}
+            {showNote && (
+            <div className="relative mb-2 bg-black text-pumpkin px-2 py-2 rounded-br shadow z-10 text-xs">
+              <button
+                className="absolute top-0 left-2 text-pumpkin hover:text-red-600 font-bold text-base"
+                onClick={() => setShowNote(false)}
+              >
+                ×
+              </button>
+              <span className="block break-words max-w-[400px] pl-4 pr-2 text-justify">
+                  creating a new user may take upto 2 minutes!
+              </span>
+            </div>
+          )}
           <MyForm f = {add_user}>
             <MyInput setValue = {(e) => {setUsername(e); setMode("")}} value = {username} placeholder = "E.g. Hikaru (case sensitive)"/>
           </MyForm>
@@ -167,20 +181,7 @@ return (
             </div>
           }
         </div>
-        <div className="relative">
-          {showNote && (
-            <div className="absolute -top-10 -left-0 -rotate-10 md:-top-30 md:-left-35 md:-rotate-35 w-1/2 bg-black text-pumpkin px-3 py-2 rounded-br shadow z-10 text-xs relative">
-              <button
-                className="absolute top-0 left-2 text-pumpkin hover:text-red-600 font-bold text-base"
-                onClick={() => setShowNote(false)}
-              >
-                ×
-              </button>
-              <span className="block break-words max-w-[200px] pl-4 pr-2 text-justify">
-                  creating a new user may take upto 2 minutes!
-              </span>
-            </div>
-          )}
+        <div>
           <ChessBoard username={username} mode={mode} />
         </div>
       </div>
@@ -202,30 +203,34 @@ return (
             </div>
             )
           }
-      </div>
-      <div className = "flex flex-col items-center">
-        <h2 className="mb-4">Quantify the similarity between any two players:</h2>
-        <MyForm f = {player_similarity}>
-          <MyInput setValue = {setP1} value = {p1} placeholder = "Player 1 username"/>
-          <MyInput setValue = {setP2} value = {p2} placeholder = "Player 2 username"/>
-        </MyForm>
-        {
-          mode === "similarity" &&
-          (
-            similarity == 0 ?
-            <div className = "text-red-500 mt-2">
-              Couldn't find at least one of the users. Please first add them to our database!
-            </div> :
-            <div className = "text-green-700 mt-2">
-              Similarity score: {similarity.toFixed(2)}
-            </div>
-          )
-        }
+        </div>
+        <div className = "flex flex-col items-center">
+          <h2 className="mb-4">Quantify the similarity between any two players:</h2>
+          <MyForm f = {player_similarity}>
+            <MyInput setValue = {setP1} value = {p1} placeholder = "Player 1 username"/>
+            <MyInput setValue = {setP2} value = {p2} placeholder = "Player 2 username"/>
+          </MyForm>
+          {
+            mode === "similarity" &&
+            (
+              similarity == 0 ?
+              <div className = "text-red-500 mt-2">
+                Couldn't find at least one of the users. Please first add them to our database!
+              </div> :
+              <div className = "text-green-700 mt-2">
+                Similarity score: {similarity.toFixed(2)}
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
   </div>
   <footer className="flex flex-col gap-8 mb-4 mt-8 text-center">
+        <div className="flex flex-col items-center space-x-1">
+          Checkout the model repository on 🤗HF  Hub:&nbsp;
+          <a target="_blank" rel="noopener noreferrer" href = "https://huggingface.co/spitfire1970/chess_player_similarity"><span className="text-pumpkin hover:underline">spitfire1970/chess_player_similarity</span></a>
+        </div>
     <div className="text-l">
     This uses the research and models I
     <sup className = "text-xs">(<a target="_blank" rel="noopener noreferrer" href="https://nakul.one"><span className="text-pumpkin hover:underline">@nakul.one</span></a>)</sup>
