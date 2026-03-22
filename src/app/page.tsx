@@ -6,6 +6,7 @@ import MyInput from "@/components/my_input";
 import MyForm from "@/components/my_form";
 import MyTable from "@/components/my_table";
 import ChessBoard from "@/components/chessboard";
+import { BACKEND_URL } from '@/config';
 
 
 const Home = () => {
@@ -25,7 +26,7 @@ const [count, setCount] = useState(0);
 
 
 console.log('refresh')
-const API = 'https://chess_app_backend.nakul.one'
+const API = BACKEND_URL
 const axiosInstance = axios.create({
   baseURL: API,
   withCredentials: true,
