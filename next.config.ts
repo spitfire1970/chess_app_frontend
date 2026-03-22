@@ -8,22 +8,17 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-	async rewrites() {
-		return [
-			{
-				source: '/api/proxy/:path*',
-				destination: `${API_URL}/:path*`,
-			},
-    {
-      source: '/gpu/proxy',
-      destination: `${GPU_URL}`, // <-- for root
-    },
-    {
-      source: '/gpu/proxy/:path*',
-      destination: `${GPU_URL}/:path*`, // <-- for paths
+  async rewrites() {
+    const rules = [];
+    if (API_URL) {
+      rules.push({ source: '/api/proxy/:path*', destination: `${API_URL}/:path*` });
     }
-		]
-	},
+    if (GPU_URL) {
+      rules.push({ source: '/gpu/proxy', destination: GPU_URL });
+      rules.push({ source: '/gpu/proxy/:path*', destination: `${GPU_URL}/:path*` });
+    }
+    return rules;
+  },
 };
 
 export default nextConfig;
