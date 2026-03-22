@@ -31,29 +31,13 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const GPU = '/gpu/proxy'
-const axiosInstanceGPU = axios.create({
-  baseURL: GPU,
-  withCredentials: true,
-});
-
 useEffect(() => {
   let isMounted = true;
 
   const checkServerAwake = async () => {
     while (isMounted && !serverAwake) {
       try {
-        const response = await axiosInstanceGPU.post(
-          '/',
-          { inputs: { endpoint_num: 0 } },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_HF_ACCESS_TOKEN}`,
-            },
-          }
-        );
+        const response = await axios.post('/api/gpu-wake');
         if (response.data.reply === "hello from inference api!!" && isMounted) {
   setServerAwake(true);
 }

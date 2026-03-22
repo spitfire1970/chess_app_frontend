@@ -1,0 +1,41 @@
+# Copy this file into your project repo and replace:
+#   - "myproject" (all occurrences) with your project name, e.g. "dashboard"
+#   - "myproject.nakul.one" with your actual subdomain
+#   - the port (3000) with whatever port your app listens on inside the container
+#
+# Workflow:
+#   1. Push code to GitHub
+#   2. GitHub Actions builds and pushes image to ghcr.io (set that up in your repo)
+#   3. SSH into the server and run:
+#        docker compose pull && docker compose up -d
+#   That's it — Traefik picks up the container and HTTPS is live within seconds.
+#
+# Notes:
+#   - You do NOT need to expose any ports to the host. Traefik reaches your app
+#     over the shared Docker network.
+#   - SSL certs are issued and renewed automatically by Traefik via Let's Encrypt.
+#   - For private ghcr.io images, run once on the server:
+#       docker login ghcr.io -u your-github-username -p your-github-pat
+#     (PAT needs read:packages scope — GitHub → Settings → Developer settings → Personal access tokens)
+
+services:
+  chess_app_frontend:
+    image: ghcr.io/spitfire1970/chess_app_frontend:latest
+    restart: unless-stopped
+    env_file:
+      - /srv/env/chess_app_frontend.env  # replace "myproject" with your repo name
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      # The hostname this project responds to
+      - "traefik.http.routers.chess_app_frontend.rule=Host(`chess.nakul.one`)"
+      - "traefik.http.routers.chess_app_frontend.entrypoints=websecure"
+      - "traefik.http.routers.chess_app_frontend.tls=true"
+      - "traefik.http.routers.chess_app_frontend.tls.certresolver=letsencrypt"
+      # The port your app listens on INSIDE the container (not the host)
+      - "traefik.http.services.chess_app_frontend.loadbalancer.server.port=3000"
+
+networks:
+  web:
+    external: true  # Shared network created on first boot, Traefik is also on this
