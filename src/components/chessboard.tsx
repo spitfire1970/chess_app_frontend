@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Chess, Square } from 'chess.js';
 import axios from 'axios';
 
-const API = '/api/proxy'
+const API = 'https://chess_app_backend.nakul.one'
 const evil = "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n *"
 const axiosInstance = axios.create({
   baseURL: API,

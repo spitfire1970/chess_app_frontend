@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import { GPU_URL } from '@/config'
 
 export async function POST() {
-  const res = await fetch(`${process.env.GPU_URL_DEPLOYED}`, {
+  const res = await fetch(GPU_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ const [count, setCount] = useState(0);
 
 
 console.log('refresh')
-const API = '/api/proxy'
+const API = 'https://chess_app_backend.nakul.one'
 const axiosInstance = axios.create({
   baseURL: API,
   withCredentials: true,

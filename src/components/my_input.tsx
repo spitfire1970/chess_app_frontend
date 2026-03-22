@@ -23,7 +23,7 @@ const MyInput = ({ value, setValue, placeholder = "" }: AutoCompleteInputProps) 
 
     const fetchSuggestions = async () => {
       try {
-        const response = await axios.get(`/api/proxy/autocomplete_usernames?query=${value}`);
+        const response = await axios.get(`https://chess_app_backend.nakul.one/autocomplete_usernames?query=${value}`);
         setSuggestions(response.data);
       } catch (err) {
         console.error("Failed to fetch suggestions:", err);
