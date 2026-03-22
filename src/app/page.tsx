@@ -33,35 +33,34 @@ const axiosInstance = axios.create({
 
 useEffect(() => {
   let isMounted = true;
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const interval = setInterval(() => {
+    setCount(prevCount => prevCount + 1);
+  }, 1000);
 
   const checkServerAwake = async () => {
-    while (isMounted && !serverAwake) {
+    while (isMounted) {
       try {
         const response = await axios.post('/api/gpu-wake');
         if (response.data.reply === "hello from inference api!!" && isMounted) {
-  setServerAwake(true);
-}
-
-        if (response.data.reply === "hello from inference api!!") {
-          if (isMounted) {
-            setServerAwake(true);
-          }
+          setServerAwake(true);
           break;
         }
-
       } catch (err: any) {
         console.error("Server not ready:", err?.response?.data || err);
       }
 
-      setTimeout(() => {
-      setCount(prevCount => prevCount + 1);
-    }, 1000);
+      if (!isMounted) break;
+      await sleep(3000);
     }
+    clearInterval(interval);
   };
 
   checkServerAwake();
   return () => {
     isMounted = false;
+    clearInterval(interval);
   };
 }, []);
 
